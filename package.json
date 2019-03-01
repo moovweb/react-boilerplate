@@ -22,7 +22,7 @@
     "prebuild": "npm run build:clean",
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "build:clean": "rimraf ./build",
-    "start": "cross-env NODE_ENV=development node server",
+    "start": "cross-env NODE_ENV=development babel-node server",
     "start:tunnel": "cross-env NODE_ENV=development ENABLE_TUNNEL=true node server",
     "start:production": "npm run test && npm run build && npm run start:prod",
     "start:prod": "cross-env NODE_ENV=production node server",
@@ -54,7 +54,6 @@
       "git add --force"
     ]
   },
-  "pre-commit": "lint:staged",
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },
@@ -93,6 +92,7 @@
   "devDependencies": {
     "@babel/cli": "7.1.2",
     "@babel/core": "7.1.2",
+    "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "7.1.0",
     "@babel/plugin-syntax-dynamic-import": "7.0.0",
     "@babel/plugin-transform-modules-commonjs": "7.1.0",
@@ -107,6 +107,7 @@
     "babel-loader": "8.0.4",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "babel-plugin-lodash": "3.3.4",
+    "babel-plugin-module-resolver": "^3.2.0",
     "babel-plugin-react-intl": "3.0.1",
     "babel-plugin-react-transform": "3.0.0",
     "babel-plugin-styled-components": "1.8.0",
@@ -161,6 +162,7 @@
     "webpack-dev-middleware": "3.4.0",
     "webpack-hot-middleware": "2.24.3 ",
     "webpack-pwa-manifest": "3.7.1",
-    "whatwg-fetch": "3.0.0"
+    "whatwg-fetch": "3.0.0",
+    "write-file-webpack-plugin": "^4.5.0"
   }
 }

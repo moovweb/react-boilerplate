@@ -3,7 +3,7 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false,
+        modules: 'commonjs',
       },
     ],
     '@babel/preset-react',
@@ -12,6 +12,15 @@ module.exports = {
     'styled-components',
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
+    [
+      'module-resolver',
+      {
+        root: ['./app'],
+        alias: {
+          containers: './app/containers',
+        },
+      },
+    ],
   ],
   env: {
     production: {
