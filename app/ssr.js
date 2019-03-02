@@ -9,15 +9,16 @@ import configureStore from './configureStore';
 import { translationMessages } from './i18n';
 
 global.ssr = function ssr(request, response) {
-  const html = renderHtml(renderApp(request.path + request.search));
+  const initialState = {};
+  const history = createMemoryHistory({ initialEntries: [uri] });
+  const store = configureStore(initialState, history);
+  const runTasks = store.runSaga()
+  const html = renderHtml(renderApp(store, request.path + request.search));
   response.send(html);
 };
 
-function renderApp(uri) {
-  const history = createMemoryHistory({ initialEntries: [uri] });
+function renderApp(store, uri) {
   const context = {};
-  const initialState = {};
-  const store = configureStore(initialState, history);
 
   return renderToString(
     <Provider store={store}>

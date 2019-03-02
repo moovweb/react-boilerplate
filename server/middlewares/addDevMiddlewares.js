@@ -34,15 +34,16 @@ module.exports = function addDevMiddlewares(app, clientConfig, serverConfig) {
   app.use(serverMiddleware);
 
   app.get('*', (req, res) => {
-    // const ssrPath = path.join(serverCompiler.outputPath, 'ssr');
-    // require(ssrPath);
-    // global.ssr(req, res);
-    fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
-      if (err) {
-        res.sendStatus(404);
-      } else {
-        res.send(file.toString());
-      }
-    });
+    const ssrPath = path.join(serverCompiler.outputPath, 'ssr');
+    require(ssrPath);
+    delete require.cache[path.resolve(ssrPath)]
+    global.ssr(req, res);
+    // fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
+    //   if (err) {
+    //     res.sendStatus(404);
+    //   } else {
+    //     res.send(file.toString());
+    //   }
+    // });
   });
 };

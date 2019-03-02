@@ -3,7 +3,7 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: 'commonjs',
+        modules: false,
       },
     ],
     '@babel/preset-react',

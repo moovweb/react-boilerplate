@@ -11,7 +11,8 @@ import { productLoaded } from '../App/actions';
  * Github repos request/response handler
  */
 export function* getProduct({ id }) {
-  const product = yield call(request, `/api/p/${id}.json`);
+  console.log('product', id)
+  const product = yield call(request, `http://localhost:3000/api/p/${id}.json`);
   yield put(productLoaded(product));
 }
 

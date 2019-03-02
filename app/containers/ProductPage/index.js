@@ -11,13 +11,12 @@ import saga from './saga';
 import { loadProduct } from './actions';
 
 export function ProductPage({ match, onProductChange, product }) {
-  console.log('render ProductPage, product=', product)
   const nextId = match.params.id;
   const [id, setId] = useState(null);
 
   useEffect(() => {
     if (nextId != id) {
-      console.log('fetch product')
+      console.log('fetch product', nextId)
       onProductChange(nextId);
       setId(nextId);
     } else {

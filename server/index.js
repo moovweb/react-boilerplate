@@ -22,6 +22,8 @@ const app = express();
 app.get('/api/p/:id.json', (req, res) => {
   const { id } = req.params;
 
+  console.log('get ' + req.path)
+
   res.send({
     id,
     name: `Product #${id}`,

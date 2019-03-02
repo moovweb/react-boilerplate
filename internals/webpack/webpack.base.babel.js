@@ -127,8 +127,11 @@ module.exports = options => ({
     modules: ['node_modules', 'app'],
     extensions: ['.js', '.jsx', '.react.js'],
     mainFields: ['browser', 'jsnext:main', 'main'],
+    alias: {
+      fetch: 'node-fetch'
+    }
   },
   devtool: options.devtool,
-  target: 'web', // Make web variables accessible to webpack, e.g. window
+  target: options.target || 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
 });
