@@ -37,10 +37,6 @@ ProductPage.getInitialSagas = function(match) {
   ]
 }
 
-ProductPage.dispatchInitialActions = function(match, store) {
-  store.dispatch(loadProduct(match.params.id))
-}
-
 export function mapDispatchToProps(dispatch) {
   return {
     onProductChange: id => dispatch(loadProduct(id)),
