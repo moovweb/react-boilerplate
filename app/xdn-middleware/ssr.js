@@ -11,6 +11,7 @@ import routes from '../containers/App/routes'
 import waitAll from './waitAll'
 import { matchPath } from 'react-router-dom'
 import get from 'lodash/get'
+import { events } from '../utils/request'
 
 export default function ssr(req, res) {
   const initialState = {}
@@ -27,23 +28,30 @@ export default function ssr(req, res) {
       return res.status(404).send(null)
     }
 
-    const getInitialSagas = get(activeRoute, 'component.getInitialSagas')
-    const sagas = getInitialSagas ? getInitialSagas(match) : []
-    const runSagas = store.runSaga(waitAll(sagas))
+    function render() {
+      process.nextTick(() => {
+        const html = renderToString(
+          <Provider store={store}>
+            <LanguageProvider messages={translationMessages}>
+              <StaticRouter location={req.url} context={context}>
+                <App />
+              </StaticRouter>
+            </LanguageProvider>
+          </Provider>
+        )
+    
+        res.status(200).send(renderHtml(html))
+      })
+    }
 
-    runSagas.done.then(() => {
-      const html = renderToString(
-        <Provider store={store}>
-          <LanguageProvider messages={translationMessages}>
-            <StaticRouter location={req.url} context={context}>
-              <App />
-            </StaticRouter>
-          </LanguageProvider>
-        </Provider>
-      )
-  
-      res.status(200).send(renderHtml(html))
-    })
+    events.on('done', render)
+    events.removeListener('done', render)
+
+    const dispatchInitialActions = get(activeRoute, 'component.dispatchInitialActions')
+
+    if (dispatchInitialActions) {
+      dispatchInitialActions(match, store)
+    }
 
     store.close()
   } catch (e) {

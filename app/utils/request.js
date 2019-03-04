@@ -1,4 +1,5 @@
 import fetch from 'fetch'
+import EventEmitter from 'events'
 
 /**
  * Parses the JSON returned by a network request
@@ -31,6 +32,10 @@ function checkStatus(response) {
   throw error;
 }
 
+let openFetches = 0
+
+export const events = new EventEmitter()
+
 /**
  * Requests a URL, returning a promise
  *
@@ -40,7 +45,18 @@ function checkStatus(response) {
  * @return {object}           The response data
  */
 export default function request(url, options) {
+  openFetches++
+
   return fetch(url, options)
     .then(checkStatus)
-    .then(parseJSON);
+    .then(parseJSON)
+    .then(trackDone);
+}
+
+function trackDone() {
+  openFetches--
+
+  if (openFetches === 0) {
+    fetchEventEmitter.emit('done')
+  }
 }
