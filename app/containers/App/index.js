@@ -11,8 +11,9 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import Routes from './Routes';
+import routes from './routes';
 import GlobalStyle from '../../global-styles';
+import Switch from './Switch'
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -33,7 +34,7 @@ export default function App() {
         <meta name="description" content="A React.js Boilerplate application" />
       </Helmet>
       <Header />
-      <Routes />
+      <Switch routes={routes}/>
       <Footer />
       <GlobalStyle />
     </AppWrapper>

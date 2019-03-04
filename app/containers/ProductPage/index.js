@@ -7,7 +7,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectProduct } from '../App/selectors';
 import reducer from './reducer';
-import saga from './saga';
+import saga, { getProduct } from './saga';
 import { loadProduct } from './actions';
 
 export function ProductPage({ match, onProductChange, product }) {
@@ -27,7 +27,14 @@ export function ProductPage({ match, onProductChange, product }) {
   if (product == null) {
     return <p>Loading...</p>;
   }
+
   return <h1>Product {product.id}</h1>;
+}
+
+ProductPage.getInitialSagas = function(match) {
+  return [
+    [getProduct, match.params]
+  ]
 }
 
 export function mapDispatchToProps(dispatch) {

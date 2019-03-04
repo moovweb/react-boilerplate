@@ -6,7 +6,7 @@ module.exports = require('./webpack.base.babel')({
   mode: 'development',
 
   entry: [
-    path.join(process.cwd(), 'app/ssr.js'), // Start with js/ssr.js
+    path.join(process.cwd(), 'app/xdn-middleware/ssr.js'), // Start with js/ssr.js
   ],
 
   // Don't use hashes in dev mode for better performance
