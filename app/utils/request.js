@@ -40,7 +40,7 @@ function markFinished(result) {
   console.log('openRequests', openRequests)
 
   if (openRequests === 0) {
-    events.emit('done')
+    events.emit('alldone')
   }
   
   return result

@@ -13,6 +13,7 @@ import { productLoaded } from '../App/actions';
 export function* getProduct({ id }) {
   console.log('getProduct(), id=', id)
   const product = yield call(request, `http://localhost:3000/api/p/${id}.json`);
+  console.log('fetched product', product)
   yield put(productLoaded(product));
 }
 

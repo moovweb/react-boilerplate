@@ -1,9 +1,9 @@
-module.exports = {
+module.exports = api => ({
   presets: [
     [
       '@babel/preset-env',
       {
-        modules: false,
+        modules: api.env().match(/server/) ? 'commonjs' : false,
       },
     ],
     '@babel/preset-react',
@@ -38,5 +38,13 @@ module.exports = {
         'dynamic-import-node',
       ],
     },
+    server: {
+      plugins: [
+        ["@babel/plugin-transform-runtime", {
+          "regenerator": true
+        }],
+        "@babel/plugin-transform-async-to-generator",
+      ]
+    }
   },
-};
+});

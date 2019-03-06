@@ -8,3 +8,7 @@ stats.json
 .DS_Store
 npm-debug.log
 .idea
+
+scripts/moov_main.js*
+/.moov
+moov_config.json
