@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { makeSelectProduct } from '../App/selectors';
@@ -14,15 +13,16 @@ export function ProductPage({ match, onProductChange, product }) {
   const nextId = match.params.id;
   const [id, setId] = useState(null);
 
-  useEffect(() => {
-    if (nextId != id) {
-      console.log('fetch product', nextId)
-      onProductChange(nextId);
-      setId(nextId);
-    } else {
-      console.log('product not changed');
-    }
-  });
+  if (__SERVER__ && product == null) {
+    onProductChange(nextId);
+  } else {
+    useEffect(() => {
+      if (nextId != id) {
+        onProductChange(nextId);
+        setId(nextId);
+      }
+    });
+  }
 
   if (product == null) {
     return <p>Loading...</p>;
@@ -39,7 +39,10 @@ ProductPage.getInitialSagas = function(match) {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onProductChange: id => dispatch(loadProduct(id)),
+    onProductChange: id => {
+      console.log(`dispatch loadProduct(${id})`)
+      dispatch(loadProduct(id))
+    }
   };
 }
 
