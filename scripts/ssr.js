@@ -18,8 +18,8 @@ export default async function ssr(url) {
     try {
       const history = createMemoryHistory({ initialEntries: [url] })
       let store = configureStore({}, history)
-  
-      const render = (store) => renderToString(
+
+      const element = (
         <ReduxRenderer url={url} store={store}>
           <LanguageProvider messages={translationMessages}>
             <App/>
@@ -29,14 +29,12 @@ export default async function ssr(url) {
   
       // render the app so that the router runs, mounts the correct page component
       // and fires off all API requests.
-      render(store)
+      renderToString(element)
 
       // When all fetch requests are finished, we wait until the next next tick 
       // to render so that fetch results can be processed and added to the store.
       whenAllFetchesAreDone(() => resolve(
-        render(
-          configureStore(store.getState(), history)
-        )
+        renderToString(element)
       ))
     } catch (e) {
       reject(e)
