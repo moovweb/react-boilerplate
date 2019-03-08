@@ -5,12 +5,16 @@ const ssr = require('./ssr').default
 useMoovAsyncTransformer()
 
 module.exports = async function() {
-  try {
-    const body = await ssr(env.path)
-    console.log('sendResponse')
-    return sendResponse({ htmlparsed: true, body })
-  } catch (e) {
-    console.log(e)
-    return sendResponse({ htmlparsed: true, body: `Error: ${e.stack}` })
+  if (env.__static_origin_path__) {
+    // static assets
+    fns.export('Cache', 'true')
+    fns.export('Cache-Time', '2903040000') // static paths use hash-based cache-busting, so we far-future cache them in varnish and the browser
+    return sendResponse({ htmlparsed: false })
+  } else {
+    try {
+      return sendResponse({ htmlparsed: true, body: await ssr() })
+    } catch (e) {
+      return sendResponse({ htmlparsed: true, body: `Error: ${e.stack}` })
+    }
   }
 }

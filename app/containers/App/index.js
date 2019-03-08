@@ -11,9 +11,12 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import routes from './routes';
 import GlobalStyle from '../../global-styles';
-import Switch from './Switch'
+import { Switch, Route } from 'react-router-dom';
+import HomePage from 'containers/HomePage/Loadable';
+import FeaturePage from 'containers/FeaturePage/Loadable';
+import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import ProductPage from 'containers/ProductPage/ProductPage';
 
 const AppWrapper = styled.div`
   max-width: calc(768px + 16px * 2);
@@ -24,19 +27,32 @@ const AppWrapper = styled.div`
   flex-direction: column;
 `;
 
-export default function App() {
-  return (
-    <AppWrapper>
-      <Helmet
-        titleTemplate="%s - React.js Boilerplate"
-        defaultTitle="React.js Boilerplate"
-      >
-        <meta name="description" content="A React.js Boilerplate application" />
-      </Helmet>
-      <Header />
-      <Switch routes={routes}/>
-      <Footer />
-      <GlobalStyle />
-    </AppWrapper>
-  );
+export default class App extends React.Component {
+
+  componentDidMount() {
+    console.log('App mount')
+  }
+
+  render() {
+    return (
+      <AppWrapper>
+        <Helmet
+          titleTemplate="%s - React.js Boilerplate"
+          defaultTitle="React.js Boilerplate"
+        >
+          <meta name="description" content="A React.js Boilerplate application" />
+        </Helmet>
+        <Header />
+        <Switch>
+          <Route exact path="/" component={HomePage} />
+          <Route path="/features" component={FeaturePage} />
+          <Route path="/p/:id" component={ProductPage} />
+          <Route path="" component={NotFoundPage} />
+        </Switch>
+        <Footer />
+        <GlobalStyle />
+      </AppWrapper>
+    )
+  }
+
 }

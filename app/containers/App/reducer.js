@@ -45,7 +45,7 @@ function appReducer(state = initialState, action) {
     case LOAD_REPOS_ERROR:
       return state.set('error', action.error).set('loading', false);
     case LOAD_PRODUCT_SUCCESS:
-      return state.set('loading', false).set('product', action.product);
+      return state.set('loading', false).set('product', fromJS(action.product));
     default:
       return state;
   }

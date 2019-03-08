@@ -17,21 +17,21 @@ import ProductPage from 'containers/ProductPage';
 // }
 
 export default [
-  {
-    path: '/',
-    exact: true,
-    component: HomePage,
-  },
-  {
-    path: '/features',
-    component: FeaturePage,
-  },
+  // {
+  //   path: '/',
+  //   exact: true,
+  //   component: HomePage,
+  // },
+  // {
+  //   path: '/features',
+  //   component: FeaturePage,
+  // },
   {
     path: '/p/:id',
     component: ProductPage
   },
-  {
-    path: '',
-    component: NotFoundPage
-  }
+  // {
+  //   path: '',
+  //   component: NotFoundPage
+  // }
 ]

@@ -1,48 +1,61 @@
 import React from 'react'
-import { renderToString } from 'react-dom/server'
+import { renderWithEnzyme } from 'react-moovweb-xdn'
 import App from 'containers/App'
-import { whenAllFetchesAreDone } from '../app/xdn-middleware/fetch'
-import ReduxRenderer from '../app/xdn-middleware/ReduxRenderer'
 import configureStore from '../app/configureStore'
 import { createMemoryHistory } from 'history'
 import { translationMessages } from '../app/i18n'
 import LanguageProvider from '../app/containers/LanguageProvider'
+import { Provider } from 'react-redux'
+import { StaticRouter } from 'react-router'
+import { getBundles } from 'react-loadable/webpack'
+import Loadable from 'react-loadable'
+import fetch from 'react-storefront/fetch'
+import flatMap from 'lodash/flatMap'
+import '../app/assets'
 
 /**
  * Renders the app on the server
  * @param {String} url The url being served
  * @return {String} The rendered html
  */
-export default async function ssr(url) {
-  return new Promise((resolve, reject) => {
-    try {
-      const history = createMemoryHistory({ initialEntries: [url] })
-      let store = configureStore({}, history)
-  
-      const render = (store) => renderToString(
-        <ReduxRenderer url={url} store={store}>
-          <LanguageProvider messages={translationMessages}>
-            <App/>
-          </LanguageProvider>
-        </ReduxRenderer>
-      )
-  
-      // render the app so that the router runs, mounts the correct page component
-      // and fires off all API requests.
-      render(store)
+export default async function ssr() {
+  const loadableStats = await getLoadableStats()
+  const webpackStats = await getWebpackStats()
+  const url = env.path
+  const history = createMemoryHistory({ initialEntries: [url] })
+  const store = configureStore({}, history)
+  const modules = []
 
-      // When all fetch requests are finished, we wait until the next next tick 
-      // to render so that fetch results can be processed and added to the store.
-      whenAllFetchesAreDone(() => resolve(
-        render(
-          configureStore(store.getState(), history)
-        )
-      ))
-    } catch (e) {
-      reject(e)
-    }
+  const mainJSAssets = flatMap(
+    Object.keys(webpackStats.assetsByChunkName).filter(key => key.match(/(^|~)main/)),
+    key => webpackStats.assetsByChunkName[key]
+  ).map(file => `/pwa/${file}`)
+
+  return await renderWithEnzyme({
+    state: () => store.getState(),
+    assets: () => {
+      return getBundles(loadableStats, modules)
+        .map(bundle => bundle.publicPath)
+        .concat(mainJSAssets)
+    },
+    element: (
+      <Loadable.Capture report={moduleName => modules.push(moduleName)}>
+        <StaticRouter location={url} context={{}}>
+          <Provider store={store}>
+            <LanguageProvider messages={translationMessages}>
+              <App/>
+            </LanguageProvider>
+          </Provider>
+        </StaticRouter>
+      </Loadable.Capture>
+    )
   })
 }
 
-global.ssr = ssr
-global.__SERVER__ = true
+const getLoadableStats = () => 
+  fetch(`http:${env.asset_host}/pwa/react-loadable.json`)
+  .then(res => res.json())
+
+const getWebpackStats = () => 
+  fetch(`http:${env.asset_host}/pwa/stats.json`)
+  .then(res => res.json())

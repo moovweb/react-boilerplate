@@ -15,6 +15,7 @@ export function* getProduct({ id }) {
   const product = yield call(request, `http://localhost:3000/api/p/${id}.json`);
   console.log('fetched product', product)
   yield put(productLoaded(product));
+  console.log('productLoaded', product)
 }
 
 /**

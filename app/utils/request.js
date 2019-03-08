@@ -1,4 +1,4 @@
-import fetch from '../xdn-middleware/fetch'
+import fetch from 'fetch'
 
 /**
  * Parses the JSON returned by a network request

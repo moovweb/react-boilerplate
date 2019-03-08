@@ -44,7 +44,9 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "prettify": "prettier --write",
     "xdn:link": "f() { ln -sf moov_config-$@.json moov_config.json; }; f",
-    "xdn:start": "npm run xdn:link local && ~/Code/moovworker/moovsdk start"
+    "xdn:start": "npm run xdn:clean && npm run xdn:link local && ~/Code/moovworker/moovsdk start",
+    "xdn:clean": "rm -rf build && mkdir -p build/assets/pwa",
+    "dev:link": "npm link react-moovweb-xdn"
   },
   "lint-staged": {
     "*.js": [
@@ -131,6 +133,7 @@
     "lint-staged": "7.3.0",
     "loadable-components": "2.2.3",
     "lodash": "4.17.11",
+    "mini-css-extract-plugin": "^0.5.0",
     "minimist": "1.2.0",
     "moov_builder": "^4.0.0-alpha.1",
     "moovsdk": "^7.1.6",
@@ -148,6 +151,7 @@
     "react-helmet": "5.2.0",
     "react-hot-loader": "^4.7.1",
     "react-intl": "2.7.2",
+    "react-loadable": "^5.5.0",
     "react-redux": "5.0.7",
     "react-router-dom": "4.3.1",
     "react-storefront": "^6.5.0",
@@ -174,6 +178,7 @@
     "webpack-dev-middleware": "3.4.0",
     "webpack-hot-middleware": "2.24.3 ",
     "webpack-pwa-manifest": "3.7.1",
+    "webpack-stats-plugin": "^0.2.1",
     "whatwg-fetch": "3.0.0",
     "write-file-webpack-plugin": "^4.5.0"
   }

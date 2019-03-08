@@ -9,6 +9,7 @@ module.exports = api => ({
     '@babel/preset-react',
   ],
   plugins: [
+    "react-loadable/babel",
     'styled-components',
     '@babel/plugin-proposal-class-properties',
     '@babel/plugin-syntax-dynamic-import',
