@@ -4,6 +4,9 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const { StatsWriterPlugin } = require("webpack-stats-plugin")
+const { ReactLoadablePlugin } = require('react-loadable/webpack')
+const outputPath = path.resolve(process.cwd(), 'build', 'assets', 'pwa')
 
 // Remove this line once the following warning goes away (it was meant for webpack loader authors not users):
 // 'DeprecationWarning: loaderUtils.parseQuery() received a non-string value which can be problematic,
@@ -17,8 +20,8 @@ module.exports = options => ({
   output: Object.assign(
     {
       // Compile into js/build.js
-      path: path.resolve(process.cwd(), 'build'),
-      publicPath: '/',
+      path: outputPath,
+      publicPath: '/pwa/',
     },
     options.output,
   ), // Merge with env dependent settings
@@ -122,13 +125,22 @@ module.exports = options => ({
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
     }),
+    new ReactLoadablePlugin({
+      filename: path.join(outputPath, 'react-loadable.json')
+    }),
+    new StatsWriterPlugin({
+      filename: 'stats.json'
+    }),
   ]),
   resolve: {
     modules: ['node_modules', 'app'],
-    extensions: ['.js', '.jsx', '.react.js'],
+    extensions: ['.js', '.json', '.jsx', '.react.js'],
     mainFields: ['browser', 'jsnext:main', 'main'],
+    alias: {
+      fetch: 'node-fetch'
+    }
   },
   devtool: options.devtool,
-  target: 'web', // Make web variables accessible to webpack, e.g. window
+  target: options.target || 'web', // Make web variables accessible to webpack, e.g. window
   performance: options.performance || {},
 });

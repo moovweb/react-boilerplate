@@ -1,0 +1,10 @@
+/**
+ * Asynchronously loads the component for ProductPage
+ */
+import Loadable from 'react-loadable';
+import LoadingIndicator from 'components/LoadingIndicator';
+
+export default Loadable({
+  loader: () => import('./ProductPage'),
+  loading: LoadingIndicator,
+});

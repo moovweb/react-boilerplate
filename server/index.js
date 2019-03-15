@@ -18,6 +18,18 @@ const app = express();
 // app.use('/api', myApi);
 
 // In production we need to pass these values in instead of relying on webpack
+
+app.get('/api/p/:id.json', (req, res) => {
+  const { id } = req.params;
+
+  console.log('get ' + req.path)
+
+  res.send({
+    id,
+    name: `Product #${id}`,
+  });
+});
+
 setup(app, {
   outputPath: resolve(process.cwd(), 'build'),
   publicPath: '/',

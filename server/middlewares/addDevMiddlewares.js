@@ -3,36 +3,47 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-function createWebpackMiddleware(compiler, publicPath) {
-  return webpackDevMiddleware(compiler, {
-    logLevel: 'warn',
-    publicPath,
-    silent: true,
-    stats: 'errors-only',
-  });
+function createWebpackMiddleware(config) {
+  const compiler = webpack(config);
+
+  return {
+    compiler,
+    middleware: webpackDevMiddleware(compiler, {
+      logLevel: 'warn',
+      publicPath: config.output.publicPath,
+      silent: true,
+      stats: 'errors-only',
+    }),
+  };
 }
 
-module.exports = function addDevMiddlewares(app, webpackConfig) {
-  const compiler = webpack(webpackConfig);
-  const middleware = createWebpackMiddleware(
-    compiler,
-    webpackConfig.output.publicPath,
-  );
+global.window = {};
 
-  app.use(middleware);
-  app.use(webpackHotMiddleware(compiler));
+module.exports = function addDevMiddlewares(app, clientConfig, serverConfig) {
+  const {
+    compiler: clientCompiler,
+    middleware: clientMiddleware,
+  } = createWebpackMiddleware(clientConfig);
+  const {
+    compiler: serverCompiler,
+    middleware: serverMiddleware,
+  } = createWebpackMiddleware(serverConfig);
 
-  // Since webpackDevMiddleware uses memory-fs internally to store build
-  // artifacts, we use it instead
-  const fs = middleware.fileSystem;
+  app.use(clientMiddleware);
+  app.use(webpackHotMiddleware(clientCompiler));
+  app.use(serverMiddleware);
 
   app.get('*', (req, res) => {
-    fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
-      if (err) {
-        res.sendStatus(404);
-      } else {
-        res.send(file.toString());
-      }
-    });
+    const ssrPath = path.join(serverCompiler.outputPath, 'ssr');
+    require(ssrPath);
+    delete require.cache[path.resolve(ssrPath)]
+    global.ssr(req, res);
+    // fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
+    //   if (err) {
+    //     res.sendStatus(404);
+    //   } else {
+    //     res.send(file.toString());
+    //   }
+    // });
   });
 };

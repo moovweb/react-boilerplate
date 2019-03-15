@@ -10,9 +10,15 @@ module.exports = (app, options) => {
     const addProdMiddlewares = require('./addProdMiddlewares');
     addProdMiddlewares(app, options);
   } else {
-    const webpackConfig = require('../../internals/webpack/webpack.dev.babel');
     const addDevMiddlewares = require('./addDevMiddlewares');
-    addDevMiddlewares(app, webpackConfig);
+
+    console.log('adding dev middlewares');
+
+    addDevMiddlewares(
+      app,
+      require('../../internals/webpack/webpack.dev.babel'),
+      require('../../internals/webpack/webpack.server.dev'),
+    );
   }
 
   return app;
