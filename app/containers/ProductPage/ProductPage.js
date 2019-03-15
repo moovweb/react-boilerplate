@@ -14,15 +14,16 @@ class ProductPage extends Component {
   }
 
   componentDidMount() {
-    this.syncProduct(this.props.match.params.id)
+    this.fetchProduct()
   }
 
   componentDidUpdate() {
-    this.syncProduct(this.props.match.params.id)
+    this.fetchProduct()
   }
 
-  syncProduct(nextId) {
+  fetchProduct() {
     const { product, onProductChange } = this.props
+    const nextId = this.props.match.params.id
 
     if (nextId && (product == null || nextId !== product.get('id'))) {
       onProductChange(nextId)
