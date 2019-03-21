@@ -20,12 +20,7 @@ export default async function renderToString() {
   const url = env.path;
   const history = createMemoryHistory({ initialEntries: [url] });
   const store = configureStore({}, history);
-  const modules = [];
-
-  const assets = await getMainJSAssets(modules, {
-    statsPath: 'stats.json',
-    loadableStatsPath: 'react-loadable.json',
-  });
+  const assets = await getMainJSAssets({ statsPath: 'stats.json' });
 
   return await renderWithEnzyme({
     state: () => store.getState(),
