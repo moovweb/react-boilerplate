@@ -42,7 +42,10 @@
     "test": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "xdn:link": "f() { ln -sf moov_config-$@.json moov_config.json; }; f",
+    "xdn:start": "npm run xdn:clean && npm run xdn:link local && ~/Code/moovworker/moovsdk start",
+    "xdn:clean": "rm -rf build && mkdir -p build/assets/pwa"
   },
   "lint-staged": {
     "*.js": [
@@ -60,6 +63,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.0.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "chalk": "2.4.1",
     "compression": "1.7.3",
     "connected-react-router": "4.5.0",
@@ -98,6 +102,7 @@
     "@babel/plugin-transform-modules-commonjs": "7.1.0",
     "@babel/plugin-transform-react-constant-elements": "7.0.0",
     "@babel/plugin-transform-react-inline-elements": "7.0.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
     "@babel/preset-env": "7.1.0",
     "@babel/preset-react": "7.0.0",
     "@babel/register": "7.0.0",
@@ -107,6 +112,7 @@
     "babel-loader": "8.0.4",
     "babel-plugin-dynamic-import-node": "2.2.0",
     "babel-plugin-lodash": "3.3.4",
+    "babel-plugin-module-resolver": "^3.2.0",
     "babel-plugin-react-intl": "3.0.1",
     "babel-plugin-react-transform": "3.0.0",
     "babel-plugin-styled-components": "1.8.0",
@@ -137,6 +143,9 @@
     "jest-cli": "23.6.0",
     "jest-styled-components": "6.2.2",
     "lint-staged": "7.3.0",
+    "moov_builder": "^4.0.0-alpha.1",
+    "moov_rewriter": "^4.0.1",
+    "moov_stdlib": "^2.7.1",
     "ngrok": "3.1.0",
     "node-plop": "0.16.0",
     "null-loader": "0.1.1",
@@ -161,6 +170,7 @@
     "webpack-dev-middleware": "3.4.0",
     "webpack-hot-middleware": "2.24.3 ",
     "webpack-pwa-manifest": "3.7.1",
-    "whatwg-fetch": "3.0.0"
+    "whatwg-fetch": "3.0.0",
+    "write-file-webpack-plugin": "^4.5.0"
   }
 }
