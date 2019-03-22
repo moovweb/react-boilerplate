@@ -1,6 +1,6 @@
 console.error = console.warn = console.log;
 
-const ssr = require('./ssr').default;
+const ssr = require('./ssr');
 
 useMoovAsyncTransformer();
 
