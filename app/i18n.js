@@ -45,7 +45,9 @@ const translationMessages = {
   de: formatTranslationMessages('de', deTranslationMessages),
 };
 
-exports.appLocales = appLocales;
-exports.formatTranslationMessages = formatTranslationMessages;
-exports.translationMessages = translationMessages;
-exports.DEFAULT_LOCALE = DEFAULT_LOCALE;
+module.exports = {
+  appLocales,
+  formatTranslationMessages,
+  translationMessages,
+  DEFAULT_LOCALE
+}

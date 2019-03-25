@@ -42,7 +42,10 @@
     "test": "cross-env NODE_ENV=test jest --coverage",
     "test:watch": "cross-env NODE_ENV=test jest --watchAll",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "prettify": "prettier --write"
+    "prettify": "prettier --write",
+    "xdn:link": "f() { ln -sf moov_config-$@.json moov_config.json; }; f",
+    "xdn:start": "npm run xdn:clean && npm run xdn:link local && ~/Code/moovworker/moovsdk start",
+    "xdn:clean": "rm -rf build && mkdir -p build/assets/pwa"
   },
   "lint-staged": {
     "*.js": [
@@ -60,6 +63,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "7.0.0",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "chalk": "2.4.1",
     "compression": "1.7.3",
     "connected-react-router": "4.5.0",
@@ -75,6 +80,9 @@
     "loadable-components": "2.2.3",
     "lodash": "4.17.11",
     "minimist": "1.2.0",
+    "moov_builder": "^4.0.0-alpha.1",
+    "moov_rewriter": "^4.0.1",
+    "moov_stdlib": "^2.7.1",
     "prop-types": "15.6.2",
     "react": "16.6.0",
     "react-dom": "16.6.0",
@@ -88,7 +96,8 @@
     "reselect": "4.0.0",
     "sanitize.css": "4.1.0",
     "styled-components": "4.0.2",
-    "warning": "4.0.2"
+    "warning": "4.0.2",
+    "write-file-webpack-plugin": "^4.5.0"
   },
   "devDependencies": {
     "@babel/cli": "7.1.2",
@@ -98,6 +107,7 @@
     "@babel/plugin-transform-modules-commonjs": "7.1.0",
     "@babel/plugin-transform-react-constant-elements": "7.0.0",
     "@babel/plugin-transform-react-inline-elements": "7.0.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
     "@babel/preset-env": "7.1.0",
     "@babel/preset-react": "7.0.0",
     "@babel/register": "7.0.0",
